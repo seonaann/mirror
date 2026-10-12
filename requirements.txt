@@ -1,0 +1,14 @@
+
+fastapi
+uvicorn
+pydantic
+python-dotenv
+google-genai
+transformers
+torch
+sentence-transformers
+scikit-learn
+pandas
+datasets
+sentencepiece
+accelerate
