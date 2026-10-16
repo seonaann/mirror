@@ -12,6 +12,10 @@ export default function Settings() {
         {conn !== null && <p role="status" className="mt-1 text-sm" style={{ color: conn ? 'var(--green)' : 'var(--red)' }}>{conn ? 'Connected' : 'Could not connect'}</p>}</div>
       <div><label htmlFor="th" className="muted flex justify-between text-sm">Confidence threshold<b>{s.threshold}</b></label>
         <input id="th" type="range" min="0" max="1" step="0.05" className="w-full accent-[#38D6E8]" value={s.threshold} onChange={e => update({ threshold: +e.target.value })} /></div>
+      <label className="flex items-start gap-3 text-sm">
+        <input type="checkbox" className="mt-1 accent-[#38D6E8]" checked={!!s.saveHistory} onChange={e => update({ saveHistory: e.target.checked })} />
+        <span><b>Save analyses to History</b><br /><span className="muted text-xs">Stored only in this browser. Possible private data is highlighted there, and you can redact or delete it.</span></span>
+      </label>
       <section><h2 className="font-bold">About MIRROR</h2>
         <p className="muted text-sm">MIRROR detects implicit demographic assumptions in AI-generated responses, explains the evidence, and suggests a counterfactual rewrite.</p>
         <div className="mt-2 flex flex-wrap gap-2">{LABELS.map(l => <span key={l} className="rounded-full bg-white/10 px-3 py-1 text-xs">{l.replace('_', ' ')}</span>)}</div></section>
