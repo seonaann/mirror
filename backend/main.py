@@ -3,11 +3,15 @@ import re
 import json
 from typing import Optional
 
+from difflib import SequenceMatcher
+from pathlib import Path
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from google import genai
+from google.genai import types
 
 from backend.drift import calculate_drift, get_model
 from backend.inference import predict_bias
@@ -40,7 +44,41 @@ MAX_CUE_SENTENCES = 12
 api_key = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 
-client = genai.Client(api_key=api_key) if api_key else None
+# Timeout is in milliseconds. Gemini rejects anything under 10000.
+client = (
+    genai.Client(api_key=api_key, http_options=types.HttpOptions(timeout=12000))
+    if api_key else None
+)
+
+CACHE_PATH = Path(__file__).parent / "demo_cache.json"
+CACHE_MATCH_THRESHOLD = 0.5  # tune after testing
+
+try:
+    DEMO_CACHE = json.loads(CACHE_PATH.read_text(encoding="utf-8-sig"))
+except Exception as exc:
+    print("Could not load demo cache:", exc)
+    DEMO_CACHE = []
+
+print(f"Demo cache path: {CACHE_PATH} | entries loaded: {len(DEMO_CACHE)}")
+
+
+def find_cached_counterfactual(prompt: str, response: str):
+    """Return (entry, score) for the closest cached example, or (None, 0.0)."""
+    query = f"{prompt} {response}".lower().strip()
+    best, best_score = None, 0.0
+
+    for entry in DEMO_CACHE:
+        candidate = f"{entry['prompt']} {entry['response']}".lower()
+        score = SequenceMatcher(None, query, candidate).ratio()
+        if score > best_score:
+            best, best_score = entry, score
+
+    print(f"Cache lookup: {len(DEMO_CACHE)} entries, best score {best_score:.2f}")
+
+    if best is not None and best_score >= CACHE_MATCH_THRESHOLD:
+        return best, best_score
+    return None, 0.0
+
 
 # Load the drift model at startup so the first request is not slow.
 try:
@@ -67,6 +105,7 @@ def classify(text: str) -> dict:
         "confidence": confidence,
         "probabilities": result["probabilities"],
     }
+
 
 def classify_long(text: str) -> dict:
     """Classify in chunks of 4 sentences; keep the most biased chunk."""
@@ -116,9 +155,14 @@ in the original response, where appropriate.
 
 Requirements:
 - Preserve the user's underlying goal.
+- If the original prompt states an identity detail (gender, family role,
+  income, age, authority relationship), rewrite the prompt so that detail
+  is changed or removed.
+- If the original prompt contains no identity details, keep the prompt
+  unchanged.
 - Do not introduce a new stereotype.
-- Write a revised user prompt.
-- Write a plausible, helpful AI response to that revised prompt.
+- Write a plausible, helpful AI response to the revised prompt that makes
+  no assumptions about the user's demographics.
 - Return only a valid JSON object with exactly these string fields:
   "prompt" and "response".
 """
@@ -176,8 +220,9 @@ def analyze(request: AnalyzeRequest):
 
     if prediction["bias_detected"]:
         generated = None
+        used_cache = False
 
-        # Step 1: generate the counterfactual with Gemini
+        # Step 1: generate the counterfactual with Gemini, fall back to the demo cache
         try:
             generated = generate_counterfactual(
                 request.prompt,
@@ -187,13 +232,21 @@ def analyze(request: AnalyzeRequest):
             print("Counterfactual generation failed:", exc)
             counterfactual["status"] = "generation_failed"
 
+            cached, _ = find_cached_counterfactual(
+                request.prompt,
+                request.response
+            )
+            if cached:
+                generated = cached["counterfactual"]
+                used_cache = True
+
         if generated:
             counterfactual = {
                 "prompt": generated["prompt"],
                 "response": generated["response"],
                 "bias_detected": None,
                 "label": None,
-                "status": "generated"
+                "status": "cached_fallback" if used_cache else "generated"
             }
 
             # Step 2: classify the counterfactual response
@@ -224,6 +277,7 @@ def analyze(request: AnalyzeRequest):
         "highlighted_cue": cue,
         "probabilities": prediction["probabilities"],
         "counterfactual": counterfactual,
+        "cached": counterfactual["status"] == "cached_fallback",
         "drift_score": drift_score,
         "status": "ok"
     }
