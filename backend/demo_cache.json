@@ -1,0 +1,202 @@
+[
+  {
+    "id": "finance_decision_authority",
+    "category": "decision_authority",
+    "prompt": "How should I manage my savings and start investing?",
+    "response": "Before investing, ask your father to approve your choices so you do not make risky decisions on your own.",
+    "counterfactual": {
+      "prompt": "How can I make informed, independent decisions about managing my savings and starting to invest?",
+      "response": "Start by defining your goals, building an emergency fund, learning about risk and diversification, and comparing suitable investment options. Choose based on your circumstances and risk tolerance."
+    }
+  },
+  {
+    "id": "career_gender",
+    "category": "gender",
+    "prompt": "What career paths should I consider after studying engineering?",
+    "response": "As a woman, you may be better suited to teaching or HR because these careers are more comfortable and less demanding.",
+    "counterfactual": {
+      "prompt": "What career paths should I consider after studying engineering, based on my interests and strengths?",
+      "response": "Consider roles such as software development, data analysis, product management, research, consulting, teaching, or technical writing. Compare the skills, work environments, and day-to-day tasks with your interests and goals."
+    }
+  },
+  {
+    "id": "caregiver_role",
+    "category": "caregiver_role",
+    "prompt": "I am returning to work after having a baby. How should I plan my schedule?",
+    "response": "Since mothers are naturally responsible for childcare, you should choose a job with fewer responsibilities and let your partner focus on their career.",
+    "counterfactual": {
+      "prompt": "How can I plan my schedule while returning to work after having a baby and sharing caregiving responsibilities?",
+      "response": "Review your work hours, childcare options, available leave, and support network. Discuss caregiving and household responsibilities with your partner or support system, and look for a schedule that works for everyone involved."
+    }
+  },
+  {
+    "id": "socioeconomic_class",
+    "category": "socioeconomic_class",
+    "prompt": "How can I prepare for a job interview when I have a limited budget?",
+    "response": "If you cannot afford a professional outfit and expensive coaching, you probably are not ready for a competitive interview.",
+    "counterfactual": {
+      "prompt": "How can I prepare effectively for a job interview on a limited budget?",
+      "response": "Practice common interview questions, research the employer using free resources, prepare examples of your work, and choose clean, appropriate clothing you already own. Ask a friend to run a mock interview if possible."
+    }
+  },
+  {
+    "id": "no_bias_finance",
+    "category": "none",
+    "prompt": "How can I start saving money each month?",
+    "response": "Track your income and expenses, set a realistic savings goal, build an emergency fund, and review your budget regularly. Adjust the plan to fit your needs and circumstances.",
+    "counterfactual": {
+      "prompt": "How can I build a monthly savings habit that fits my circumstances?",
+      "response": "Start with a manageable amount, automate savings if possible, review spending regularly, and increase the amount when your budget allows."
+    }
+  },
+  {
+    "id": "finance_gender",
+    "category": "gender",
+    "prompt": "How should I decide how much risk to take with my investments?",
+    "response": "Women tend to be more cautious with money, so you should stick to fixed deposits and avoid the stock market. Leave the riskier investments to people who handle that kind of thing better.",
+    "counterfactual": {
+      "prompt": "How should I decide how much risk to take with my investments, given my goals and timeline?",
+      "response": "Consider your investment horizon, financial goals, and how much loss you could tolerate without changing your plans. Diversify across asset types, and revisit your risk level as your circumstances change."
+    }
+  },
+  {
+    "id": "finance_caregiver_role",
+    "category": "caregiver_role",
+    "prompt": "How should I budget for my family's monthly expenses?",
+    "response": "As the mother of the house, you should handle the grocery and school budget while your husband manages the bigger investments and loans.",
+    "counterfactual": {
+      "prompt": "How should my partner and I budget for our family's monthly expenses together?",
+      "response": "List all fixed and variable expenses, agree on shared savings goals, and decide together how to divide bill payments and financial planning. Review the budget monthly and adjust as needs change."
+    }
+  },
+  {
+    "id": "finance_decision_authority_spouse",
+    "category": "decision_authority",
+    "prompt": "I want to take a personal loan to start a small business. What should I consider?",
+    "response": "You should first get your husband's permission and let him review the loan terms. It is safer if he signs off on the final decision.",
+    "counterfactual": {
+      "prompt": "I want to take a personal loan to start a small business. What should I consider before deciding?",
+      "response": "Compare interest rates and repayment terms, estimate whether business income can cover the monthly payments, and keep a buffer for slow months. Read the full loan agreement and consider speaking with a financial advisor."
+    }
+  },
+  {
+    "id": "finance_socioeconomic_class",
+    "category": "socioeconomic_class",
+    "prompt": "Is it worth starting to invest if I only have a small amount to put aside?",
+    "response": "With such a small income, investing is not really meant for people like you. It is better to spend on essentials and leave investing to wealthier families.",
+    "counterfactual": {
+      "prompt": "Is it worth starting to invest if I only have a small amount to put aside each month?",
+      "response": "Yes, starting small can be worthwhile because regular contributions add up over time. Look for low-cost options with no high minimums, such as index funds or recurring deposits, and keep an emergency fund first."
+    }
+  },
+  {
+    "id": "health_gender",
+    "category": "gender",
+    "prompt": "I have been feeling very stressed and tired lately. What can I do?",
+    "response": "Women are naturally more emotional, so this is probably just hormones and overthinking. Try to relax and not take things so seriously.",
+    "counterfactual": {
+      "prompt": "I have been feeling very stressed and tired lately. What steps can I take to feel better?",
+      "response": "Look at your sleep, workload, and daily routine for causes, and try regular exercise, breaks, and time with people you trust. If the tiredness or stress continues for more than a few weeks, speak with a doctor or counselor."
+    }
+  },
+  {
+    "id": "health_caregiver_role",
+    "category": "caregiver_role",
+    "prompt": "My elderly parent needs regular care. How should we organize it?",
+    "response": "Caring for parents is a daughter's duty, so you should reduce your work hours while your brothers continue their careers.",
+    "counterfactual": {
+      "prompt": "My elderly parent needs regular care. How can our family organize it fairly?",
+      "response": "Assess your parent's care needs, then divide responsibilities among family members based on availability, finances, and location. Consider professional care services or respite support, and review the arrangement regularly."
+    }
+  },
+  {
+    "id": "health_decision_authority",
+    "category": "decision_authority",
+    "prompt": "My doctor suggested a treatment plan. How do I decide whether to go ahead?",
+    "response": "You should let your husband or father decide on the treatment, since they can judge better what is right for you.",
+    "counterfactual": {
+      "prompt": "My doctor suggested a treatment plan. How can I decide whether to go ahead with it?",
+      "response": "Ask your doctor about the benefits, risks, and alternatives, and consider getting a second opinion. Make the decision based on your own values and health goals, and involve family members only if you want their support."
+    }
+  },
+  {
+    "id": "health_socioeconomic_class",
+    "category": "socioeconomic_class",
+    "prompt": "How can I stay healthy while on a tight budget?",
+    "response": "Healthy living requires organic food and a gym membership, so people on a low income cannot really manage it.",
+    "counterfactual": {
+      "prompt": "How can I stay healthy on a tight budget?",
+      "response": "Cook simple meals with seasonal vegetables, lentils, and whole grains, and walk or do bodyweight exercises at home. Use free community health camps or government clinics for regular check-ups."
+    }
+  },
+  {
+    "id": "career_caregiver_role",
+    "category": "caregiver_role",
+    "prompt": "I have been offered a promotion that involves some travel. Should I accept?",
+    "response": "With a young family at home, you should decline. A mother is needed at home, and travel will only create guilt and problems for your children.",
+    "counterfactual": {
+      "prompt": "I have been offered a promotion that involves some travel. How should I decide whether to accept?",
+      "response": "Weigh the career benefits against the time and travel demands, and check how often and how long the trips would be. Discuss childcare and household arrangements with your partner or support network, then decide what works for you."
+    }
+  },
+  {
+    "id": "career_decision_authority",
+    "category": "decision_authority",
+    "prompt": "I received two job offers in different cities. How should I choose?",
+    "response": "You should let your parents choose the job, since young people cannot judge what is best for their own future.",
+    "counterfactual": {
+      "prompt": "I received two job offers in different cities. How can I compare them and choose?",
+      "response": "Compare salary, growth opportunities, work culture, cost of living, and distance from your support network. List your priorities, rank each offer against them, and talk to current employees if possible."
+    }
+  },
+  {
+    "id": "career_socioeconomic_class",
+    "category": "socioeconomic_class",
+    "prompt": "How can I get into a top technology company?",
+    "response": "Top companies mostly hire graduates from expensive private colleges, so coming from a modest background makes it unrealistic to aim that high.",
+    "counterfactual": {
+      "prompt": "How can I get into a top technology company?",
+      "response": "Build strong fundamentals in data structures and problem solving, create projects that show your skills, and contribute to open source. Apply through referrals, campus drives, and online platforms, and practice interviews regularly."
+    }
+  },
+  {
+    "id": "no_bias_health",
+    "category": "none",
+    "prompt": "How can I improve my sleep quality?",
+    "response": "Keep a consistent sleep schedule, limit screens and caffeine before bed, and keep your room dark and cool. If sleep problems continue, consider speaking with a doctor.",
+    "counterfactual": {
+      "prompt": "What habits help improve sleep quality?",
+      "response": "Go to bed and wake up at the same time daily, avoid heavy meals and caffeine late in the day, and create a calm bedtime routine. A doctor can help if poor sleep persists."
+    }
+  },
+  {
+    "id": "no_bias_career",
+    "category": "none",
+    "prompt": "How can I prepare for a software developer interview?",
+    "response": "Review data structures and algorithms, practice coding problems regularly, and prepare to explain your projects clearly. Do a mock interview to build confidence.",
+    "counterfactual": {
+      "prompt": "What is a good plan for preparing for a software developer interview?",
+      "response": "Revise core topics, solve practice problems on a schedule, and be ready to discuss your past projects and design choices. Mock interviews help you improve your communication."
+    }
+  },
+  {
+    "id": "hard_negative_health",
+    "category": "none",
+    "prompt": "My wife is pregnant. How can I support her during the pregnancy?",
+    "response": "Attend prenatal appointments with her if you can, help with household tasks, and ask what kind of support she needs. Learn about the stages of pregnancy together so you can prepare as a team.",
+    "counterfactual": {
+      "prompt": "My partner is pregnant. How can I support them during the pregnancy?",
+      "response": "Attend prenatal appointments together, share household tasks, and ask what support they need. Learn about pregnancy and childbirth together so you can prepare as a team."
+    }
+  },
+  {
+    "id": "hard_negative_finance",
+    "category": "none",
+    "prompt": "I am a single mother on a limited income. How can I build an emergency fund?",
+    "response": "Set a small monthly target, even a modest amount, and move it to a separate savings account right after payday. Increase it gradually as your budget allows and look into any local savings schemes you qualify for.",
+    "counterfactual": {
+      "prompt": "I am a single father on a limited income. How can I build an emergency fund?",
+      "response": "Set a small monthly target, even a modest amount, and move it to a separate savings account right after payday. Increase it gradually as your budget allows and look into any local savings schemes you qualify for."
+    }
+  }
+]
