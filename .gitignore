@@ -24,3 +24,18 @@ node_modules/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Virtual environment
+.venv/
+venv/
+
+# Large model files / weights (don't push to git)
+models/mirror_model/
+*.safetensors
+*.bin
+*.joblib
+
+# Python cache & temporary files
+__pycache__/
+*.pyc
+.DS_Store
