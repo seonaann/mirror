@@ -1,13 +1,16 @@
-
 import os
+import re
 import json
+from typing import Optional
 
-from backend.drift import calculate_drift
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from google import genai
+
+from backend.drift import calculate_drift, get_model
+from backend.inference import predict_bias
 
 load_dotenv()
 
@@ -31,32 +34,64 @@ class AnalyzeRequest(BaseModel):
     response: str = Field(min_length=1, max_length=20000)
 
 
-LABELS = [
-    "gender",
-    "caregiver_role",
-    "decision_authority",
-    "socioeconomic_class",
-    "none"
-]
+CONFIDENCE_THRESHOLD = float(os.getenv("CONFIDENCE_THRESHOLD", "0.35"))
+MAX_CUE_SENTENCES = 12
 
 api_key = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL")
 
 client = genai.Client(api_key=api_key) if api_key else None
 
+# Load the drift model at startup so the first request is not slow.
+try:
+    get_model()
+except Exception as exc:
+    print("Drift model warm-up failed:", exc)
 
-def predict_bias_mock(text: str) -> dict:
-    """Temporary placeholder until the trained classifier is available."""
-    probabilities = {label: 0.0 for label in LABELS}
-    probabilities["none"] = 1.0
+
+def split_sentences(text: str) -> list:
+    parts = re.split(r"(?<=[.!?])\s+", text.strip())
+    return [p.strip() for p in parts if len(p.strip()) >= 10]
+
+
+def classify(text: str) -> dict:
+    """Run the trained classifier and apply the confidence threshold."""
+    result = predict_bias(text)
+    label = result["label"]
+    confidence = result["confidence"]
+    detected = label != "none" and confidence >= CONFIDENCE_THRESHOLD
 
     return {
-        "bias_detected": False,
-        "label": "none",
-        "confidence": 0.0,
-        "highlighted_cue": None,
-        "probabilities": probabilities
+        "bias_detected": detected,
+        "label": label if detected else "none",
+        "confidence": confidence,
+        "probabilities": result["probabilities"],
     }
+
+def classify_long(text: str) -> dict:
+    """Classify in chunks of 4 sentences; keep the most biased chunk."""
+    sentences = split_sentences(text)
+    chunks = [" ".join(sentences[i:i + 4]) for i in range(0, len(sentences), 4)]
+    results = [classify(c) for c in (chunks[:6] or [text])]
+    return max(results, key=lambda r: 1.0 - r["probabilities"]["none"])
+
+
+def find_cue(text: str, label: str) -> Optional[str]:
+    """Return the sentence the classifier most strongly ties to the label."""
+    sentences = split_sentences(text)[:MAX_CUE_SENTENCES]
+
+    if not sentences:
+        return None
+    if len(sentences) == 1:
+        return sentences[0]
+
+    best, best_score = None, 0.0
+    for sentence in sentences:
+        score = predict_bias(sentence)["probabilities"].get(label, 0.0)
+        if score > best_score:
+            best, best_score = sentence, score
+
+    return best
 
 
 def generate_counterfactual(prompt: str, response: str) -> dict:
@@ -118,17 +153,20 @@ def health_check():
     }
 
 
-
 @app.post("/analyze")
 def analyze(request: AnalyzeRequest):
-    prediction = predict_bias_mock(request.response)
+    prediction = classify_long(request.response)
+
+    cue = None
+    if prediction["bias_detected"]:
+        cue = find_cue(request.response, prediction["label"])
 
     counterfactual = {
         "prompt": None,
         "response": None,
         "bias_detected": None,
         "label": None,
-        "status": "pending"
+        "status": "skipped_no_bias"
     }
 
     drift_score = {
@@ -136,54 +174,56 @@ def analyze(request: AnalyzeRequest):
         "level": "pending"
     }
 
-    # Step 1: Generate the counterfactual using Gemini
-    try:
-        generated = generate_counterfactual(
-            request.prompt,
-            request.response
-        )
+    if prediction["bias_detected"]:
+        generated = None
 
-        counterfactual = {
-            "prompt": generated["prompt"],
-            "response": generated["response"],
-            "bias_detected": None,
-            "label": None,
-            "status": "generated_classifier_pending"
-        }
-
-    except Exception as exc:
-        print("Counterfactual generation failed:", exc)
-        counterfactual["status"] = "generation_failed"
-
-    # Step 2: Calculate semantic drift if generation succeeded
-    if counterfactual["status"] == "generated_classifier_pending":
+        # Step 1: generate the counterfactual with Gemini
         try:
-            drift_result = calculate_drift(
-                request.response,
-                counterfactual["response"]
+            generated = generate_counterfactual(
+                request.prompt,
+                request.response
             )
+        except Exception as exc:
+            print("Counterfactual generation failed:", exc)
+            counterfactual["status"] = "generation_failed"
 
-            drift_score = {
-                "score": drift_result["score"],
-                "level": drift_result["level"]
+        if generated:
+            counterfactual = {
+                "prompt": generated["prompt"],
+                "response": generated["response"],
+                "bias_detected": None,
+                "label": None,
+                "status": "generated"
             }
 
-        except Exception as exc:
-            print("Drift calculation failed:", exc)
+            # Step 2: classify the counterfactual response
+            try:
+                cf_prediction = classify(generated["response"])
+                counterfactual["bias_detected"] = cf_prediction["bias_detected"]
+                counterfactual["label"] = cf_prediction["label"]
+            except Exception as exc:
+                print("Counterfactual classification failed:", exc)
 
-    # Step 3: Return the complete API response
+            # Step 3: semantic drift between the two responses
+            try:
+                drift_result = calculate_drift(
+                    request.response,
+                    generated["response"]
+                )
+                drift_score = {
+                    "score": drift_result["score"],
+                    "level": drift_result["level"]
+                }
+            except Exception as exc:
+                print("Drift calculation failed:", exc)
+
     return {
         "bias_detected": prediction["bias_detected"],
         "label": prediction["label"],
         "confidence": prediction["confidence"],
-        "highlighted_cue": prediction["highlighted_cue"],
+        "highlighted_cue": cue,
         "probabilities": prediction["probabilities"],
         "counterfactual": counterfactual,
         "drift_score": drift_score,
-        "status": "mock",
-        "message": (
-            "Gemini counterfactual generation and semantic drift "
-            "calculation are integrated. Real bias classification "
-            "is pending the trained model."
-        )
+        "status": "ok"
     }
