@@ -145,12 +145,19 @@ Requirements:
     return data
 
 
+
 @app.get("/")
 def health_check():
     return {
         "status": "running",
         "message": "MIRROR backend is working!"
     }
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 
 
 @app.post("/analyze")

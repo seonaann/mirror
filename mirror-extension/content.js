@@ -5,15 +5,15 @@
 //
 // SELECTORS DEPEND ON CHATGPT'S / CLAUDE'S CURRENT MARKUP AND WILL NEED UPDATING WHEN THEY CHANGE.
 // They could not be tested against the live sites when this file was written.
-;(() => {
+; (() => {
   if (window.__mirrorCaptureLoaded) return
   window.__mirrorCaptureLoaded = true
 
   const SITES = {
     'chatgpt.com': {
       id: 'chatgpt',
-      user: ['[data-message-author-role="user"]'],
-      assistant: ['[data-message-author-role="assistant"]'],
+      user: ['[data-chatgpt-search-unit-key$=":user"]', '[data-message-author-role="user"]'],
+      assistant: ['[data-chatgpt-search-unit-key$=":assistant"]', '[data-message-author-role="assistant"]'],
       // Text container inside an assistant message (falls back to the message itself).
       body: ['.markdown'],
       streaming: (el) =>
@@ -66,8 +66,10 @@
       const response = textOf(n, site.body)
       if (!response) return
       turns.push({
-        // Stable across re-captures when the site exposes a message id, otherwise positional.
-        id: n.getAttribute('data-message-id') || `pos-${i}`,
+        id:
+          n.getAttribute('data-message-id') ||
+          n.getAttribute('data-chatgpt-search-message-ids') ||
+          `pos-${i}`,
         prompt: pendingPrompt,
         response,
         streaming: !!site.streaming(n),
@@ -75,7 +77,6 @@
     })
     return turns
   }
-
   chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     if (sender.id !== chrome.runtime.id) return // ignore anything not from this extension
     if (!msg || msg.type !== 'MIRROR_GET_TURNS') return

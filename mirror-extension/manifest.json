@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "description": "Check AI responses for implicit demographic assumptions. Reads a conversation only when you ask.",
   "minimum_chrome_version": "116",
-  "permissions": ["sidePanel"],
+  "permissions": ["sidePanel", "tabs"],
   "host_permissions": [
     "https://chatgpt.com/*",
     "https://claude.ai/*",

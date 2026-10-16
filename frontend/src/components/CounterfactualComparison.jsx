@@ -6,7 +6,18 @@ export default function CounterfactualComparison({ original, result, biased }) {
   const [copied, setCopied] = useState(false)
   const cf = result.counterfactual
   if (!biased) return <div className="p-8 text-center"><h2 className="font-bold">Nothing to rewrite</h2><p className="muted text-sm">No assumption was detected in this response.</p></div>
-  if (!cf?.text) return <div className="p-8 text-center muted">The backend did not return a rewrite for this response.</div>
+  if (!cf?.text) {
+  const message =
+    cf?.status === 'generation_failed'
+      ? 'Counterfactual generation failed. Check the backend terminal for the error, then try again.'
+      : 'The backend did not return a rewrite for this response.'
+
+  return (
+    <div role="status" className="p-8 text-center muted">
+      {message}
+    </div>
+  )
+}
   const copy = async () => { await navigator.clipboard.writeText(cf.text); setCopied(true); setTimeout(() => setCopied(false), 1500) }
   const pct = (n) => (typeof n === 'number' ? Math.round(n * 100) + '%' : null)
   return (

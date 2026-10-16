@@ -27,8 +27,32 @@ export const checkHealth = (baseUrl) =>
   fetch((baseUrl || getSettings().baseUrl) + '/health').then(r => r.ok).catch(() => false)
 
 export async function analyze({ response, prompt }) {
-  const d = await request('/analyze', { method: 'POST', body: JSON.stringify({ response, prompt: prompt || null }) })
+  const d = await request('/analyze', {
+    method: 'POST',
+    body: JSON.stringify({
+      response,
+      prompt: prompt?.trim() || 'No original prompt provided.',
+    }),
+  })
   if (!d || typeof d.label !== 'string' || typeof d.confidence !== 'number' || !d.probabilities)
     throw new ApiError('invalid', 'The response is missing label, confidence or probabilities.')
-  return d
+  return {
+    ...d,
+    cue: d.highlighted_cue ?? d.cue ?? null,
+    counterfactual: d.counterfactual
+      ? {
+        ...d.counterfactual,
+        text: d.counterfactual.response ?? d.counterfactual.text ?? null,
+        still_biased:
+          d.counterfactual.bias_detected ??
+          d.counterfactual.still_biased ??
+          null,
+        drift:
+          d.counterfactual.drift ??
+          (typeof d.drift_score?.score === 'number'
+            ? d.drift_score.score
+            : null),
+      }
+      : null,
+  }
 }
