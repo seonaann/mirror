@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { Waves, Clock, FlaskConical, Settings } from 'lucide-react'
+import { Waves, Clock, Settings } from 'lucide-react'
 import BackendStatus from '../components/BackendStatus.jsx'
-const nav = [['/', 'Analyze', Waves], ['/history', 'History', Clock], ['/research', 'Research', FlaskConical], ['/settings', 'Settings', Settings]]
+const nav = [['/', 'Analyze', Waves], ['/history', 'History', Clock], ['/settings', 'Settings', Settings]]
 export default function AppLayout() {
   return (
     <div className="scene min-h-screen">

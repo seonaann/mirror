@@ -1,21 +1,127 @@
 @import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Fraunces:wght@500;600&display=swap');
-:root{--navy:#062B49;--ocean:#075985;--cyan:#38D6E8;--turq:#68D6C0;--cream:#F5F1E6;--red:#DC5555;--green:#36A879}
-html,body,#root{height:100%}
-body{margin:0;font-family:Nunito,system-ui,sans-serif;color:var(--cream);
- background:linear-gradient(180deg,#0b4f74 0%,#075985 35%,#062B49 100%) fixed}
-.scene{background:linear-gradient(180deg,rgba(6,43,73,.35),rgba(6,43,73,.85)),url('/ocean.jpg') center/cover fixed}
-.brand{font-family:Fraunces,serif;letter-spacing:.14em}
-.panel{background:rgba(6,43,73,.72);border:1px solid rgba(245,241,230,.14);border-radius:20px;backdrop-filter:blur(8px)}
-.field{width:100%;background:rgba(6,43,73,.55);border:1px solid rgba(245,241,230,.18);border-radius:12px;padding:.8rem 1rem;color:var(--cream)}
-.field:focus,.btn:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border-radius:12px;padding:.8rem 1.4rem;font-weight:700;
- background:linear-gradient(135deg,var(--cyan),var(--turq));color:var(--navy);transition:opacity .2s}
-.btn:disabled{opacity:.4;cursor:not-allowed}
-.btn-ghost{background:transparent;color:var(--cream);border:1px solid rgba(245,241,230,.25)}
-.muted{color:rgba(245,241,230,.65)}
-mark.cue{background:rgba(220,85,85,.55);color:#fff;border-radius:4px;padding:0 .25rem}
-mark.add{background:rgba(54,168,121,.45);color:#fff;border-radius:4px;padding:0 .2rem}
-.skel{background:linear-gradient(90deg,rgba(245,241,230,.06),rgba(245,241,230,.16),rgba(245,241,230,.06));background-size:200% 100%;animation:sh 1.6s infinite;border-radius:8px}
-@keyframes sh{to{background-position:-200% 0}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+
+:root {
+    --navy: #062B49;
+    --ocean: #075985;
+    --cyan: #38D6E8;
+    --turq: #68D6C0;
+    --cream: #F5F1E6;
+    --red: #DC5555;
+    --green: #36A879
+}
+
+html,
+body,
+#root {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    font-family: Nunito, system-ui, sans-serif;
+    color: var(--cream);
+    background: linear-gradient(180deg, #0b4f74 0%, #075985 35%, #062B49 100%) fixed
+}
+
+.scene {
+    background: linear-gradient(180deg, rgba(6, 43, 73, .35), rgba(6, 43, 73, .85)), url('/ocean.jpg') center/cover fixed
+}
+
+.brand {
+    font-family: Fraunces, serif;
+    letter-spacing: .14em
+}
+
+.panel {
+    background: rgba(6, 43, 73, .72);
+    border: 1px solid rgba(245, 241, 230, .14);
+    border-radius: 20px;
+    backdrop-filter: blur(8px)
+}
+
+.field {
+    width: 100%;
+    background: rgba(6, 43, 73, .55);
+    border: 1px solid rgba(245, 241, 230, .18);
+    border-radius: 12px;
+    padding: .8rem 1rem;
+    color: var(--cream)
+}
+
+.field:focus,
+.btn:focus-visible,
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    border-radius: 12px;
+    padding: .8rem 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--cyan), var(--turq));
+    color: var(--navy);
+    transition: opacity .2s
+}
+
+.btn:disabled {
+    opacity: .4;
+    cursor: not-allowed
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--cream);
+    border: 1px solid rgba(245, 241, 230, .25)
+}
+
+.muted {
+    color: rgba(245, 241, 230, .65)
+}
+
+mark.cue {
+    background: rgba(220, 85, 85, .55);
+    color: #fff;
+    border-radius: 4px;
+    padding: 0 .25rem
+}
+
+mark.add {
+    background: rgba(54, 168, 121, .45);
+    color: #fff;
+    border-radius: 4px;
+    padding: 0 .2rem
+}
+
+mark.pii {
+    background: #FFE600;
+    color: var(--navy);
+    font-weight: 600;
+    border-radius: 4px;
+    padding: 0 .2rem
+}
+
+.skel {
+    background: linear-gradient(90deg, rgba(245, 241, 230, .06), rgba(245, 241, 230, .16), rgba(245, 241, 230, .06));
+    background-size: 200% 100%;
+    animation: sh 1.6s infinite;
+    border-radius: 8px
+}
+
+@keyframes sh {
+    to {
+        background-position: -200% 0
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+    * {
+        animation: none !important
+    }
+}

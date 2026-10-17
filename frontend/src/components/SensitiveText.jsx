@@ -7,7 +7,7 @@ export default function SensitiveText({ text }) {
   return (
     <p className="leading-relaxed whitespace-pre-wrap">
       {parts.map((p, i) => p.span
-        ? <mark key={i} className="pii" title={p.span.label}>{p.text}<sup className="ml-1 text-[10px] font-bold">{p.span.tag}</sup></mark>
+        ? <mark key={i} className="pii" title={p.span.label}>{p.text}</mark>
         : <span key={i}>{p.text}</span>)}
     </p>
   )
