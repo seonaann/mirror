@@ -349,57 +349,104 @@ The extension is the end-user surface of MIRROR. It overlays the MIRROR report o
 **Build and load**
 
 ```bash
-cd frontend/extension
+cd frontend
 npm install
-npm run build        # outputs dist/
+npm run build:extension    # compiles extension UI into mirror-extension/ui/
 ```
 
-Then open `chrome://extensions`, enable **Developer mode**, click **Load unpacked** and select `frontend/extension/dist`.
-
-Chat-site layouts change often. Keep page selectors in one config object so a fix is quick, and keep the paste-text path as a fallback.
+Then in your browser (Chrome, Brave, Edge):
+1. Open `chrome://extensions/`
+2. Enable **Developer mode** (toggle in the top-right corner)
+3. Click **Load unpacked**
+4. Select the `mirror-extension` folder inside this repository
 
 ---
 
 ## Getting started
 
 ### Prerequisites
-- Python 3.10+
-- Node.js 18+
-- PostgreSQL (for accounts, annotations and opted-in history)
-- A Gemini API key
-- Chrome or another Chromium browser (for the extension)
+- **Python 3.10+**
+- **Node.js 18+** & npm
+- A **Gemini API key** (free from [Google AI Studio](https://aistudio.google.com/))
+- **Chrome or Chromium-based browser** (to run the extension)
 
 ### 1. Clone and configure
 
 ```bash
-git clone <your-repo-url> MIRROR
-cd MIRROR
-cp .env.example .env      # then fill in the values
+git clone https://github.com/seonaann/mirror.git
+cd mirror
+cp .env.example .env      # Windows PowerShell: Copy-Item .env.example .env
 ```
 
-### 2. Backend
-
-```bash
-python -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn backend.main:app --reload --port 8000    # adjust module path to your app
+Open `.env` and fill in your Gemini API key and model:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
-Check it: open `http://localhost:8000/health` (and `/docs` for the interactive API).
+### 2. Backend (FastAPI + PyTorch)
 
-### 3. Web dashboard
+1. Create and activate a Python virtual environment:
+   ```bash
+   python -m venv .venv
 
+   # Activate virtual environment:
+   # On Windows PowerShell:
+   .venv\Scripts\Activate.ps1
+   # On macOS/Linux:
+   source .venv/bin/activate
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Ensure the trained model checkpoint is present under `models/mirror_model/` (contains `config.json`, `model.safetensors`, `tokenizer.json`, `tokenizer_config.json`).
+
+4. Start the backend server:
+   ```bash
+   uvicorn backend.main:app --reload --host 127.0.0.1 --port 8000
+   ```
+
+5. Verify backend health:
+   - Health check: `http://localhost:8000/health`
+   - Interactive Swagger API docs: `http://localhost:8000/docs`
+
+### 3. Frontend Web Dashboard (React + Vite)
+
+In a separate terminal window:
 ```bash
-cd frontend/web
+cd frontend
 npm install
 npm run dev
 ```
 
-### 4. Extension
-See [Browser extension](#browser-extension).
+Open `http://localhost:5173` in your browser to access the MIRROR web interface.
 
-### 5. Try it
+### 4. Chrome Extension (Side Panel)
+
+To run MIRROR alongside ChatGPT or Claude:
+
+1. Build the extension bundle from the `frontend/` directory:
+   ```bash
+   cd frontend
+   npm run build:extension
+   ```
+   *(This compiles the React app into `mirror-extension/ui/` with relative asset links compatible with Chrome Extension side panel).*
+
+2. Load the extension in Chrome:
+   - Navigate to `chrome://extensions/`
+   - Enable **Developer mode** (toggle at top right)
+   - Click **Load unpacked** (top left)
+   - Select the `mirror-extension` folder in the root of this project.
+
+3. Use the extension:
+   - Pin the MIRROR extension in your Chrome toolbar.
+   - Open the side panel on `https://chatgpt.com` or `https://claude.ai`.
+   - Click **Read from ChatGPT/Claude** or paste any prompt and response to detect assumptions in real time.
+
+### 5. Quick Test via cURL
 
 ```bash
 curl -X POST http://localhost:8000/analyze \
@@ -411,15 +458,15 @@ curl -X POST http://localhost:8000/analyze \
 
 ## Configuration
 
-Copy `.env.example` to `.env`. Typical variables (align with your template):
+Copy `.env.example` to `.env`. Variables configured:
 
-| Variable | Purpose |
-|---|---|
-| `GEMINI_API_KEY` | Counterfactual generation |
-| `MODEL_PATH` | Path or ID of the fine-tuned DeBERTa checkpoint |
-| `DATABASE_URL` | PostgreSQL connection string |
-| `CORS_ORIGINS` | Allowed origins, including `chrome-extension://<extension-id>` |
-| `LOG_LEVEL` | Logging verbosity |
+| Variable | Description | Example |
+|---|---|---|
+| `GEMINI_API_KEY` | Google Gemini API key used for counterfactual generation | `AIzaSy...` |
+| `GEMINI_MODEL` | Gemini model name for counterfactual rewrites | `gemini-2.5-flash` or `gemini-1.5-flash` |
+
+> [!NOTE]
+> Free-tier Gemini models have daily request quotas. If a rate limit (HTTP 429) is reached, the backend gracefully skips counterfactual generation while still returning detection, confidence scores, and cue highlighting.
 
 Never commit `.env`, API keys or private data. `.env` is already in `.gitignore`.
 
