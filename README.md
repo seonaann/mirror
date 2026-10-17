@@ -28,10 +28,9 @@ MIRROR is a final-year B.Tech Computer Science project that detects, explains an
 14. [Getting started](#getting-started)
 15. [Configuration](#configuration)
 16. [Privacy, confidentiality and security](#privacy-confidentiality-and-security)
-17. [Limitations and responsible use](#limitations-and-responsible-use)
-18. [Target users and business context](#target-users-and-business-context)
-19. [Roadmap](#roadmap)
-20. [Team, license and citation](#team-license-and-citation)
+17. [Target users and business context](#target-users-and-business-context)
+18. [Roadmap](#roadmap)
+19. [Team, license and citation](#team-license-and-citation)
 
 ---
 
@@ -102,18 +101,6 @@ The classifier and the rewriting service have separate jobs: the classifier *det
 - Highlighted cue with inline colour-coded text
 - Radar chart of all five category probabilities
 - Counterfactual tab: what the AI could have said, plus a re-check result
-- 👍 / 👎 / ❓ feedback on each prediction
-- Exportable report card (JSON / PDF)
-
-**Researchers and auditors**
-- Per-class precision, recall and F1, confusion matrix, calibration view
-- Comparison of model versions and evaluation runs
-- Export of reports as CSV, JSON and PDF
-
-**Annotators and administrators**
-- Annotation workspace with evidence spans, notes, uncertain cases and inter-annotator agreement
-- Model and dataset registry, role-based permissions, audit logs
-
 ---
 
 ## Architecture and tech stack
@@ -147,8 +134,6 @@ flowchart TB
 | Detector | DeBERTa, PyTorch, Hugging Face Transformers | Five-class classification, confidence |
 | Counterfactuals | Gemini API | Rewrite while preserving task and meaning |
 | Evaluation | Python, scikit-learn | Metrics, comparisons, reports |
-| Database | PostgreSQL | Accounts, annotations, model metadata, opted-in history |
-| Charts | Recharts / Chart.js (web), inline SVG (extension) | Probabilities, confusion matrix, score comparison |
 
 ---
 
@@ -481,18 +466,6 @@ Never commit `.env`, API keys or private data. `.env` is already in `.gitignore`
 - **Logs without content.** Log analysis IDs, timings and labels, not conversation text.
 - **Transport and access.** Use HTTPS in deployment; apply role-based access for annotators, researchers and admins.
 - **Minimal extension permissions.** No `<all_urls>`; only named sites and `localhost`.
-
----
-
-## Limitations and responsible use
-
-- MIRROR flags **potential** assumptions for review. It is decision support, not a verdict or a certificate of fairness.
-- Implicit assumptions are **context-dependent**; the same sentence can be fine or biased in different situations.
-- Model confidence is **not** the probability that text is biased. Softmax scores can be overconfident, so calibration is checked.
-- Coverage is limited to four assumption types in a defined set of domains (health, finance, career); it cannot detect all bias.
-- Dataset limits: language, culture and label subjectivity affect results.
-- Rewrites are suggestions and are re-analysed rather than assumed unbiased.
-- Do not make performance claims beyond what the evaluation supports.
 
 ---
 
