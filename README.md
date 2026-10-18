@@ -495,19 +495,12 @@ Never commit `.env`, API keys or private data. `.env` is already in `.gitignore`
 
 ---
 
-## Team, license and citation
 
-- **Team:** *add names and roles (model, backend, frontend/dashboard, extension, dataset/annotation)*
-- **Supervisor / institution:** *add*
-- **License:** *choose one (for example MIT for code, CC BY 4.0 for the dataset) and add a `LICENSE` file*
-- **Citation:**
 
 ```bibtex
 @misc{mirror2026,
   title  = {MIRROR: Detecting and Mitigating Implicit Demographic Assumptions in LLM Outputs},
-  author = {<your names>},
-  year   = {2026},
-  note   = {B.Tech final-year project, <institution>}
+  
 }
 ```
 
