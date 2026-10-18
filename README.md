@@ -295,15 +295,6 @@ Accuracy alone is not enough. MIRROR reports:
 
 **Results** *(fill in after evaluation; do not publish placeholder numbers)*
 
-| Metric | Value |
-|---|---|
-| Accuracy | TBD |
-| Macro precision / recall / F1 | TBD |
-| ECE (before / after temperature scaling) | TBD |
-| Hard-negative false-positive rate | TBD |
-| Annotator agreement (κ) | TBD |
-| Counterfactual pass rate on re-check | TBD |
-| ADS vs human-rating correlation | TBD |
 
 ---
 
