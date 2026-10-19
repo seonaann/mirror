@@ -5,8 +5,6 @@
 > *Every time AI answers, it may quietly guess who you are. MIRROR helps us see that guess.*
 
 MIRROR detects, explains and measures **implicit demographic and role-based assumptions** in Large Language Model (LLM) outputs, in real time, through a web dashboard and a browser extension.
-
-> **Project status:** research prototype. Example outputs in this document are illustrative. Accuracy, calibration and Assumption Drift Score results are reported in [Evaluation](#evaluation) only once they have been measured on held-out data.
 ---
 
 ## The problem
