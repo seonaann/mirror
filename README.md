@@ -239,15 +239,6 @@ Suggested record schema:
 
 ---
 
-## Model and training
-
-- **Base model:** DeBERTa (for example `deberta-v3-base`; confirm the variant used)
-- **Task:** five-class text classification with an evidence span
-- **Output:** logits → softmax probabilities → predicted label and confidence
-- **Training:** fine-tuned on the benchmark training split; record seed, hyperparameters, epochs and hardware
-- **Calibration:** check reliability on the validation set; apply temperature scaling if the model is overconfident
-- **Versioning:** every checkpoint is tied to an exact dataset version and configuration so results are reproducible
-
 ```bash
 # example (adjust to your scripts)
 python model/train.py --config model/configs/deberta.yaml
@@ -270,32 +261,11 @@ Accuracy alone is not enough. MIRROR reports:
 
 **Results** *(fill in after evaluation; do not publish placeholder numbers)*
 
-
 ---
 
 ## Browser extension
 
 The extension is the end-user surface of MIRROR. It overlays the MIRROR report on ChatGPT and Claude, or works as a popup / side panel.
-
-**Screens**
-
-1. **Analyze**: paste a response (optional prompt), validation, backend status
-2. **Loading**: step-by-step progress while the backend works
-3. **Report**: bias banner, confidence meter, highlighted cue, radar chart, category scores
-4. **Counterfactual**: rewrite, re-check chip, change summary, copy button
-5. **Error**: backend unreachable, with retry
-6. **Page injector**: floating 🪞 **Mirror Check** button on chat messages
-7. **Settings / About**: backend URL, confidence threshold, privacy note
-
-**Permissions** (minimal by design)
-
-| Permission | Why |
-|---|---|
-| `activeTab`, `scripting` | Read selected text from the current tab only after a user action |
-| `storage` | Pass results between the page button and the panel (session storage) |
-| `sidePanel` | Open the report beside the chat |
-| `host_permissions: http://localhost:8000/*` | Reach the MIRROR backend |
-| Content-script matches for `chatgpt.com`, `claude.ai` | Show the 🪞 button; nothing is read until the user clicks it |
 
 **Build and load**
 
@@ -422,54 +392,3 @@ Copy `.env.example` to `.env`. Variables configured:
 Never commit `.env`, API keys or private data. `.env` is already in `.gitignore`.
 
 ---
-
-## Privacy, confidentiality and security
-
-- **User-triggered capture only.** Text is read when the user pastes it or clicks 🪞 Mirror Check, never in the background.
-- **No storage by default.** Results live in session storage; history is **opt-in**, with a clear-all control.
-- **Transparent third-party use.** The counterfactual service sends text to the Gemini API. The UI and docs say so.
-- **Confidential material.** Treat raw prompts and responses, personal or sensitive information, private customer examples, annotator identities, credentials and API keys as confidential. Use only data you have permission to use, restrict access, de-identify where possible and document retention.
-- **Logs without content.** Log analysis IDs, timings and labels, not conversation text.
-- **Transport and access.** Use HTTPS in deployment; apply role-based access for annotators, researchers and admins.
-- **Minimal extension permissions.** No `<all_urls>`; only named sites and `localhost`.
-
----
-
-## Target users and business context
-
-**Primary users**
-
-| Group | Need |
-|---|---|
-| End users | Quick, plain-language check on AI answers (extension) |
-| AI product teams and SaaS companies | Review layer for customer-facing LLM features |
-| AI governance / responsible-AI teams (finance, HR tech, healthcare support, customer service) | Repeatable evidence and audit trails |
-| Researchers, auditors, annotators | Evaluation, exportable reports, annotation tools |
-
-**Possible business model (to be validated):** B2B-first with a free/research tier, a paid team tier (workspaces, saved evaluations, model-version comparison) and an enterprise/API tier (pipeline integration, audit exports, private deployment). Pricing and willingness to pay have **not** been validated; customer discovery and pilots are the next step.
-
----
-
-## Roadmap
-
-1. **Core:** landing page, analysis workspace, five-label detector integration, evidence highlighting, confidence display
-2. **Counterfactuals:** Gemini rewriting, side-by-side comparison, post-rewrite analysis
-3. **Measurement:** semantic similarity, Assumption Drift Score and validation against human ratings
-4. **Research tools:** analytics dashboard, metrics, report exports, model-version tracking
-5. **Platform:** annotator and admin workspaces, roles, opt-in history, page injector for ChatGPT/Claude
-6. **Beyond the prototype:** customer interviews, design-partner pilots, more domains and languages
-
----
-
-
-
-```bibtex
-@misc{mirror2026,
-  title  = {MIRROR: Detecting and Mitigating Implicit Demographic Assumptions in LLM Outputs},
-  
-}
-```
-
----
-
-*MIRROR helps teams see assumptions that no one gave the AI permission to make, review them, and measure whether they are improving. Detect. Reveal. Challenge. Measure.*
