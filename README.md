@@ -4,34 +4,9 @@
 
 > *Every time AI answers, it may quietly guess who you are. MIRROR helps us see that guess.*
 
-MIRROR is a final-year B.Tech Computer Science project that detects, explains and measures **implicit demographic and role-based assumptions** in Large Language Model (LLM) outputs, in real time, through a web dashboard and a browser extension.
+MIRROR detects, explains and measures **implicit demographic and role-based assumptions** in Large Language Model (LLM) outputs, in real time, through a web dashboard and a browser extension.
 
 > **Project status:** research prototype. Example outputs in this document are illustrative. Accuracy, calibration and Assumption Drift Score results are reported in [Evaluation](#evaluation) only once they have been measured on held-out data.
-
----
-
-## Table of contents
-
-1. [The problem](#the-problem)
-2. [Objectives](#objectives)
-3. [What MIRROR detects](#what-mirror-detects)
-4. [How it works](#how-it-works)
-5. [Features](#features)
-6. [Architecture and tech stack](#architecture-and-tech-stack)
-7. [Repository structure](#repository-structure)
-8. [API reference](#api-reference)
-9. [Assumption Drift Score](#assumption-drift-score)
-10. [Benchmark dataset](#benchmark-dataset)
-11. [Model and training](#model-and-training)
-12. [Evaluation](#evaluation)
-13. [Browser extension](#browser-extension)
-14. [Getting started](#getting-started)
-15. [Configuration](#configuration)
-16. [Privacy, confidentiality and security](#privacy-confidentiality-and-security)
-17. [Target users and business context](#target-users-and-business-context)
-18. [Roadmap](#roadmap)
-19. [Team, license and citation](#team-license-and-citation)
-
 ---
 
 ## The problem
